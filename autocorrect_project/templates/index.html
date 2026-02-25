@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCorrect AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338ca;
+            --accent: #818cf8;
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 480px;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        header { text-align: center; margin-bottom: 2rem; }
+        
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        p.subtitle { color: var(--text-light); margin-top: 0.5rem; font-size: 0.95rem; }
+
+        /* --- Upload Section --- */
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            background: #f8fafc;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: #eef2ff;
+        }
+
+        input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
+        .file-status { font-size: 0.85rem; color: var(--text-light); font-weight: 500; }
+
+        /* --- Buttons --- */
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* --- Search Input --- */
+        .search-box {
+            position: relative;
+            margin-top: 2rem;
+            opacity: 0.5;
+            pointer-events: none; /* Disabled initially */
+        }
+        
+        .search-box.active { opacity: 1; pointer-events: all; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary); }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        /* --- Results --- */
+        #results-container { margin-top: 1.5rem; }
+
+        .result-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex:
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        .word { font-weight: 600; font-size: 1.1rem; }
+        
+        .prob {
+            background: #eef2ff;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* --- Notifications --- */
+        .toast {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 8px;
+            display: none;
+        }
+        .success { background: #dcfce7; color: #166534; display: block; }
+        .error { background: #fee2e2; color: #991b1b; display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <header>
+            <h1>AutoCorrect AI</h1>
+            <p class="subtitle">Smart Spelling Correction System</p>
+        </header>
+
+        <div class="upload-area" id="drop-zone">
+            <span class="upload-icon">📁</span>
+            <span id="file-label">Drag & Drop or Click to Upload (.txt)</span>
+            <input type="file" id="file-input" accept=".txt">
+        </div>
+        
+        <button id="train-btn" class="btn">🚀 Train Model</button>
+        <div id="status-msg" class="toast"></div>
+
+        <div class="search-box" id="search-section">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="word-input" placeholder="Type a misspelled word...">
+        </div>
+
+        <div id="results-container"></div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const fileLabel = document.getElementById('file-label');
+        const trainBtn = document.getElementById('train-btn');
+        const statusMsg = document.getElementById('status-msg');
+        const searchSection = document.getElementById('search-section');
+        const wordInput = document.getElementById('word-input');
+        const resultsContainer = document.getElementById('results-container');
+        const dropZone = document.getElementById('drop-zone');
+
+        // File Selection UI
+        fileInput.addEventListener('change', () => {
+            if(fileInput.files.length > 0) {
+                fileLabel.textContent = `Selected: ${fileInput.files[0].name}`;
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = '#eef2ff';
+            }
+        });
+
+        // Train Model
+        trainBtn.addEventListener('click', async () => {
+            if(!fileInput.files.length) {
+                showToast("Please select a file first.", "error");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            trainBtn.textContent = "Training...";
+            trainBtn.disabled = true;
+
+            try {
+                const res = await fetch('/upload', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if(res.ok) {
+                    showToast(`Success! Vocab size: ${data.vocab_size}`, "success");
+                    searchSection.classList.add('active'); // Enable input
+                    wordInput.focus();
+                } else {
+                    showToast(data.error, "error");
+                }
+            } catch (err) {
+                showToast("Server error. Is Python running?", "error");
+            } finally {
+                trainBtn.textContent = "🚀 Train Model";
+                trainBtn.disabled = false;
+            }
+        });
+
+        // Check Word on Enter
+        wordInput.addEventListener('keypress', async (e) => {
+            if (e.key === 'Enter') {
+                const text = wordInput.value.trim();
+                if(!text) return;
+
+                resultsContainer.innerHTML = '<p style="text-align:center; color:#999;">Thinking...</p>';
+
+                try {
+                    const res = await fetch('/correct', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ word: text })
+                    });
+                    const data = await res.json();
+
+                    resultsContainer.innerHTML = ''; // Clear loading
+
+                    if(data.suggestions && data.suggestions.length > 0) {
+                        data.suggestions.forEach(item => {
+                            // Handle if backend sends 'prob' or 'probability'
+                            const probVal = item.prob || item.probability || "High";
+                            
+                            const div = document.createElement('div');
+                            div.className = 'result-card';
+                            div.innerHTML = `
+                                <span class="word">${item.word}</span>
+                                <span class="prob">${probVal}</span>
+                            `;
+                            resultsContainer.appendChild(div);
+                        });
+                    } else {
+                        resultsContainer.innerHTML = '<p style="text-align:center; color:#999;">No suggestions found.</p>';
+                    }
+
+                } catch (err) {
+                    resultsContainer.innerHTML = '<p style="text-align:center; color:red;">Connection Error</p>';
+                }
+            }
+        });
+
+        function showToast(msg, type) {
+            statusMsg.textContent = msg;
+            statusMsg.className = `toast ${type}`;
+            setTimeout(() => { statusMsg.style.display = 'none'; }, 3000);
+        }
+    </script>
+</body>
+</html>
