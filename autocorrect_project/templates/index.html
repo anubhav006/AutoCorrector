@@ -10,20 +10,17 @@
         :root {
             --primary: #4F46E5;
             --primary-dark: #4338ca;
-            --accent: #818cf8;
-            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-bg: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
             --text-main: #1f2937;
             --text-light: #6b7280;
-            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius: 16px;
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius: 20px;
         }
 
         * { box-sizing: border-box; transition: all 0.3s ease; }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: var(--bg-gradient);
             color: var(--text-main);
             margin: 0;
             min-height: 100vh;
@@ -31,60 +28,73 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            
+            /* --- BACKGROUND IMAGE SETTINGS --- */
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover; /* Ensures image covers the whole screen */
+            position: relative;
+        }
+
+        /* Dark Overlay to make text readable */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4); /* Darkens the background by 40% */
+            z-index: -1;
         }
 
         .main-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px); /* Strong Glass Effect */
+            -webkit-backdrop-filter: blur(12px);
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             padding: 2.5rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         header { text-align: center; margin-bottom: 2rem; }
         
         h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin: 0;
-            background: -webkit-linear-gradient(45deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary);
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        p.subtitle { color: var(--text-light); margin-top: 0.5rem; font-size: 0.95rem; }
+        p.subtitle { color: var(--text-light); margin-top: 0.5rem; font-size: 1rem; }
 
         /* --- Upload Section --- */
         .upload-area {
-            border: 2px dashed #cbd5e1;
+            border: 2px dashed #94a3b8;
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
             cursor: pointer;
             position: relative;
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
         }
 
-        .upload-area:hover, .upload-area.dragover {
+        .upload-area:hover {
             border-color: var(--primary);
-            background: #eef2ff;
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.02);
         }
 
         input[type="file"] {
             position: absolute;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
+            top: 0; left: 0; opacity: 0; cursor: pointer;
         }
 
-        .upload-icon { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
-        .file-status { font-size: 0.85rem; color: var(--text-light); font-weight: 500; }
+        .upload-icon { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+        .file-status { font-size: 0.9rem; color: var(--text-light); font-weight: 500; }
 
         /* --- Buttons --- */
         .btn {
@@ -95,21 +105,21 @@
             background: var(--primary);
             color: white;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            margin-top: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
         }
 
         .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
 
         /* --- Search Input --- */
         .search-box {
             position: relative;
             margin-top: 2rem;
             opacity: 0.5;
-            pointer-events: none; /* Disabled initially */
+            pointer-events: none;
         }
         
         .search-box.active { opacity: 1; pointer-events: all; }
@@ -117,21 +127,18 @@
         input[type="text"] {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 1rem;
             outline: none;
-            font-family: inherit;
+            background: rgba(255, 255, 255, 0.9);
         }
 
-        input[type="text"]:focus { border-color: var(--primary); }
+        input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
 
         .search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
+            position: absolute; left: 1rem; top: 50%;
+            transform: translateY(-50%); color: var(--text-light);
         }
 
         /* --- Results --- */
@@ -140,38 +147,29 @@
         .result-card {
             background: white;
             padding: 1rem;
-            border-radius: 10px;
-            display: flex:
+            border-radius: 12px;
+            display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 0.8rem;
             border-left: 5px solid var(--primary);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             animation: slideUp 0.4s ease-out forwards;
         }
 
-        .word { font-weight: 600; font-size: 1.1rem; }
-        
         .prob {
-            background: #eef2ff;
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            background: #e0e7ff; color: var(--primary);
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 700;
         }
 
         /* --- Notifications --- */
         .toast {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 0.5rem;
-            border-radius: 8px;
-            display: none;
+            margin-top: 1rem; font-size: 0.9rem; text-align: center;
+            padding: 0.8rem; border-radius: 8px; display: none; fontWeight: 600;
         }
-        .success { background: #dcfce7; color: #166534; display: block; }
-        .error { background: #fee2e2; color: #991b1b; display: block; }
+        .success { background: #dcfce7; color: #166534; display: block; border: 1px solid #bbf7d0; }
+        .error { background: #fee2e2; color: #991b1b; display: block; border: 1px solid #fecaca; }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(10px); }
@@ -189,7 +187,7 @@
 
         <div class="upload-area" id="drop-zone">
             <span class="upload-icon">📁</span>
-            <span id="file-label">Drag & Drop or Click to Upload (.txt)</span>
+            <span id="file-label" class="file-status">Drag & Drop or Click to Upload (.txt)</span>
             <input type="file" id="file-input" accept=".txt">
         </div>
         
@@ -214,16 +212,14 @@
         const resultsContainer = document.getElementById('results-container');
         const dropZone = document.getElementById('drop-zone');
 
-        // File Selection UI
         fileInput.addEventListener('change', () => {
             if(fileInput.files.length > 0) {
                 fileLabel.textContent = `Selected: ${fileInput.files[0].name}`;
                 dropZone.style.borderColor = 'var(--primary)';
-                dropZone.style.background = '#eef2ff';
+                dropZone.style.background = 'rgba(79, 70, 229, 0.1)';
             }
         });
 
-        // Train Model
         trainBtn.addEventListener('click', async () => {
             if(!fileInput.files.length) {
                 showToast("Please select a file first.", "error");
@@ -242,7 +238,7 @@
 
                 if(res.ok) {
                     showToast(`Success! Vocab size: ${data.vocab_size}`, "success");
-                    searchSection.classList.add('active'); // Enable input
+                    searchSection.classList.add('active'); 
                     wordInput.focus();
                 } else {
                     showToast(data.error, "error");
@@ -255,13 +251,12 @@
             }
         });
 
-        // Check Word on Enter
         wordInput.addEventListener('keypress', async (e) => {
             if (e.key === 'Enter') {
                 const text = wordInput.value.trim();
                 if(!text) return;
 
-                resultsContainer.innerHTML = '<p style="text-align:center; color:#999;">Thinking...</p>';
+                resultsContainer.innerHTML = '<p style="text-align:center; color:#666;">Thinking...</p>';
 
                 try {
                     const res = await fetch('/correct', {
@@ -271,25 +266,22 @@
                     });
                     const data = await res.json();
 
-                    resultsContainer.innerHTML = ''; // Clear loading
+                    resultsContainer.innerHTML = ''; 
 
                     if(data.suggestions && data.suggestions.length > 0) {
                         data.suggestions.forEach(item => {
-                            // Handle if backend sends 'prob' or 'probability'
                             const probVal = item.prob || item.probability || "High";
-                            
                             const div = document.createElement('div');
                             div.className = 'result-card';
                             div.innerHTML = `
-                                <span class="word">${item.word}</span>
+                                <span style="font-weight:600; font-size:1.1rem;">${item.word}</span>
                                 <span class="prob">${probVal}</span>
                             `;
                             resultsContainer.appendChild(div);
                         });
                     } else {
-                        resultsContainer.innerHTML = '<p style="text-align:center; color:#999;">No suggestions found.</p>';
+                        resultsContainer.innerHTML = '<p style="text-align:center; color:#666;">No suggestions found.</p>';
                     }
-
                 } catch (err) {
                     resultsContainer.innerHTML = '<p style="text-align:center; color:red;">Connection Error</p>';
                 }
