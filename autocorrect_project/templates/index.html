@@ -8,12 +8,14 @@
     
     <style>
         :root {
-            --primary: #4F46E5;
-            --primary-dark: #4338ca;
-            --card-bg: rgba(255, 255, 255, 0.85); /* Semi-transparent white */
-            --text-main: #1f2937;
-            --text-light: #6b7280;
-            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --primary: #818cf8;       /* Lighter Indigo for dark background */
+            --primary-hover: #6366f1;
+            /* Ultra Transparent Glass Backgrounds */
+            --card-glass: rgba(255, 255, 255, 0.1); 
+            --input-glass: rgba(255, 255, 255, 0.15);
+            --border-glass: rgba(255, 255, 255, 0.2);
+            --text-main: #ffffff;     /* White text */
+            --text-light: #e2e8f0;    /* Light gray text */
             --radius: 20px;
         }
 
@@ -29,31 +31,32 @@
             align-items: center;
             padding: 20px;
             
-            /* --- BACKGROUND IMAGE SETTINGS --- */
+            /* Background Image */
             background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center fixed;
-            background-size: cover; /* Ensures image covers the whole screen */
+            background-size: cover;
             position: relative;
         }
 
-        /* Dark Overlay to make text readable */
+        /* Dark Overlay to make white text pop */
         body::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4); /* Darkens the background by 40% */
+            background: rgba(0, 0, 0, 0.5); /* 50% dark overlay */
             z-index: -1;
         }
 
+        /* --- THE TRANSPARENT GLASS CARD --- */
         .main-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px); /* Strong Glass Effect */
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--card-glass);
+            backdrop-filter: blur(16px); /* Strong blur effect */
+            -webkit-backdrop-filter: blur(16px);
             width: 100%;
             max-width: 500px;
             padding: 2.5rem;
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-glass);
         }
 
         header { text-align: center; margin-bottom: 2rem; }
@@ -61,40 +64,39 @@
         h1 {
             font-size: 2.2rem;
             margin: 0;
-            color: var(--primary);
+            color: #ffffff;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
         p.subtitle { color: var(--text-light); margin-top: 0.5rem; font-size: 1rem; }
 
         /* --- Upload Section --- */
         .upload-area {
-            border: 2px dashed #94a3b8;
+            border: 2px dashed var(--border-glass);
             border-radius: var(--radius);
             padding: 2rem;
             text-align: center;
             cursor: pointer;
             position: relative;
-            background: rgba(255, 255, 255, 0.5);
-            transition: all 0.3s;
+            background: var(--input-glass);
         }
 
         .upload-area:hover {
             border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.25);
             transform: scale(1.02);
         }
 
         input[type="file"] {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             top: 0; left: 0; opacity: 0; cursor: pointer;
         }
 
         .upload-icon { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
-        .file-status { font-size: 0.9rem; color: var(--text-light); font-weight: 500; }
+        .file-status { font-size: 0.9rem; color: #ffffff; font-weight: 500; }
 
         /* --- Buttons --- */
         .btn {
@@ -108,17 +110,17 @@
             font-size: 1.1rem;
             cursor: pointer;
             margin-top: 1.5rem;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 4px 15px rgba(129, 140, 248, 0.4);
         }
 
-        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        .btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn:disabled { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; box-shadow: none; }
 
         /* --- Search Input --- */
         .search-box {
             position: relative;
             margin-top: 2rem;
-            opacity: 0.5;
+            opacity: 0.4;
             pointer-events: none;
         }
         
@@ -127,49 +129,57 @@
         input[type="text"] {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e2e8f0;
+            border: 1px solid var(--border-glass);
             border-radius: 12px;
             font-size: 1rem;
             outline: none;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--input-glass);
+            color: white;
         }
 
-        input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        input[type="text"]::placeholder { color: rgba(255,255,255,0.6); }
+        input[type="text"]:focus { border-color: var(--primary); background: rgba(255,255,255,0.2); }
 
         .search-icon {
             position: absolute; left: 1rem; top: 50%;
-            transform: translateY(-50%); color: var(--text-light);
+            transform: translateY(-50%); color: rgba(255,255,255,0.7);
         }
 
         /* --- Results --- */
         #results-container { margin-top: 1.5rem; }
 
         .result-card {
-            background: white;
+            background: var(--input-glass);
+            backdrop-filter: blur(10px);
             padding: 1rem;
             border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 0.8rem;
-            border-left: 5px solid var(--primary);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+            border-top: 1px solid var(--border-glass);
+            border-right: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
             animation: slideUp 0.4s ease-out forwards;
         }
 
         .prob {
-            background: #e0e7ff; color: var(--primary);
+            background: rgba(129, 140, 248, 0.2); 
+            color: #c7d2fe;
             padding: 5px 12px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 700;
+            font-size: 0.85rem; font-weight: 600;
+            border: 1px solid rgba(129, 140, 248, 0.3);
         }
 
         /* --- Notifications --- */
         .toast {
             margin-top: 1rem; font-size: 0.9rem; text-align: center;
-            padding: 0.8rem; border-radius: 8px; display: none; fontWeight: 600;
+            padding: 0.8rem; border-radius: 8px; display: none; font-weight: 600;
+            backdrop-filter: blur(5px);
         }
-        .success { background: #dcfce7; color: #166534; display: block; border: 1px solid #bbf7d0; }
-        .error { background: #fee2e2; color: #991b1b; display: block; border: 1px solid #fecaca; }
+        .success { background: rgba(34, 197, 94, 0.2); color: #86efac; display: block; border: 1px solid rgba(34, 197, 94, 0.4); }
+        .error { background: rgba(239, 68, 68, 0.2); color: #fca5a5; display: block; border: 1px solid rgba(239, 68, 68, 0.4); }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(10px); }
@@ -191,7 +201,7 @@
             <input type="file" id="file-input" accept=".txt">
         </div>
         
-        <button id="train-btn" class="btn">🚀 Train Model</button>
+        <button id="train-btn" class="btn">Train Model</button>
         <div id="status-msg" class="toast"></div>
 
         <div class="search-box" id="search-section">
@@ -216,7 +226,7 @@
             if(fileInput.files.length > 0) {
                 fileLabel.textContent = `Selected: ${fileInput.files[0].name}`;
                 dropZone.style.borderColor = 'var(--primary)';
-                dropZone.style.background = 'rgba(79, 70, 229, 0.1)';
+                dropZone.style.background = 'rgba(255,255,255,0.2)';
             }
         });
 
@@ -256,7 +266,7 @@
                 const text = wordInput.value.trim();
                 if(!text) return;
 
-                resultsContainer.innerHTML = '<p style="text-align:center; color:#666;">Thinking...</p>';
+                resultsContainer.innerHTML = '<p style="text-align:center; color:rgba(255,255,255,0.7);">Thinking...</p>';
 
                 try {
                     const res = await fetch('/correct', {
@@ -274,16 +284,16 @@
                             const div = document.createElement('div');
                             div.className = 'result-card';
                             div.innerHTML = `
-                                <span style="font-weight:600; font-size:1.1rem;">${item.word}</span>
+                                <span style="font-weight:600; font-size:1.1rem; color: white;">${item.word}</span>
                                 <span class="prob">${probVal}</span>
                             `;
                             resultsContainer.appendChild(div);
                         });
                     } else {
-                        resultsContainer.innerHTML = '<p style="text-align:center; color:#666;">No suggestions found.</p>';
+                        resultsContainer.innerHTML = '<p style="text-align:center; color:rgba(255,255,255,0.7);">No suggestions found.</p>';
                     }
                 } catch (err) {
-                    resultsContainer.innerHTML = '<p style="text-align:center; color:red;">Connection Error</p>';
+                    resultsContainer.innerHTML = '<p style="text-align:center; color:#fca5a5;">Connection Error</p>';
                 }
             }
         });
